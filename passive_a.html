@@ -1,0 +1,2226 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <!--
+    CHOSEN PALETTE: Glassmorphic Dark Slate & Neon Cyan/Indigo/Amber/Emerald/Rose
+    - Background: Deep Indigo/Slate Gradient (#ffc2c2, #ffd9c2, #c2cdff)
+    - Glass Containers: bg-slate-900/60 backdrop-blur-xl border border-white/10
+    - Primary Accents: Cyan (#06b6d4), Indigo (#6366f1), Amber (#ffc2c2)
+    - Status Accents: Emerald (#10b981 - Non-aggressive), Yellow (#eab308 - Avoidant), Orange (#f97316 - PA Pattern), Rose (#f43f5e - Aggression by Omission)
+
+    CONFIRMATION:
+    Explicitne potvrdzujem, že v celom kóde NEBOLA použitá knižnica Mermaid JS a ani grafika SVG.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktívny prehľad pasívnej agresie</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Custom Ambient Glow Blobs */
+        .glass-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 0;
+        }
+        :root {
+        --farba-okna: #365191;       /* napr. tmavomodrá */
+        --farba-okraja: #ffffff;     /* napr. biela */
+        --farba-nadpisu: #67e8f9;    /* napr. cyanová */
+        --farba-textu: #cbd5e1;      /* napr. svetlosivá */
+    
+        }
+        body {
+            /* Váš zvolený farebný gradient z poznámky */
+            background: linear-gradient(135deg, #ffecc2, #ffd9c2, #c2d9ff);
+            /* Zabezpečí, že pozadie pokryje celú obrazovku aj pri scrollovaní */
+            min-height: 100vh; 
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen relative overflow-x-hidden">
+
+    <!-- AMBIENT BACKGROUND TRANSPARENT SHAPES -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="glass-blob w-[500px] h-[500px] bg-indigo-600 top-[-100px] left-[-100px]"></div>
+        <div class="glass-blob w-[600px] h-[600px] bg-blue-600 top-[30%] right-[-150px]"></div>
+        <div class="glass-blob w-[500px] h-[500px] bg-rose-600 bottom-[-100px] left-[20%]"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- HERO HEADER -->
+        <header class="bg-gradient-to-r from-indigo-950/80 via-slate-900/90 to-indigo-950/80 backdrop-blur-xl border-2 border-indigo-500/40 rounded-3xl p-6 md:p-10 shadow-2xl shadow-indigo-950/50 text-center relative overflow-hidden">
+            <div class="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-400/30 text-indigo-300 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+                
+                <span class="text-xs font-light text-cyan-400 uppercase tracking-widest bg-slate-500/10 border border-slate-400/30 px-3 py-1 rounded-full">Interaktívny prehľad</span>
+            </div>
+            
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white mb-4">
+                PASÍVNA AGRESIA: <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-slate-300">Čo o nej (ne)vieme?</span>
+            </h1>
+
+            <p class="max-w-3xl mx-auto text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+                Aké prejavy vidíme ◇ Motivácia a funkcie ◇ História konceptu ◇ Súčasný stav poznania 
+            </p>
+
+            
+        </header>
+
+        <!-- SECTION 1: STRED DIAGRAMU & LAY VS. SCIENTIFIC ICEBERG -->
+        <section class="space-y-8">
+            
+            <!-- CENTRAL CORE NODE -->
+            <div class="bg-gradient-to-r from-indigo-950/80 via-slate-900/90 to-indigo-950/80 backdrop-blur-xl border-2 border-indigo-500/40 rounded-3xl p-6 md:p-8 text-center shadow-2xl relative">
+                <span class="text-xs font-light text-cyan-400 uppercase tracking-widest bg-slate-500/10 border border-slate-400/30 px-3 py-1 rounded-full">Insight</span>
+                <h2 class="text-2xl md:text-4xl font-black text-white mt-2">Agresia opomenutím</h2>
+                <p class="text-slate-200 font-medium text-sm md:text-base mt-1">
+                    „Keď odpor alebo nepriateľstvo nejde von priamo, ale prejaví sa skryto, zámerným zadržaním konania, s cieľom nechať druhému vzniknúť ujmu.“
+                </p>
+                
+            </div>
+            
+            <!-- DEFINITION HIGHLIGHT BOX -->
+            <div class="max-w-4xl mx-auto bg-slate-900/5 border border-white/10 rounded-2xl p-5 text-left backdrop-blur-md">
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">💡</span>
+                    <div>
+                        <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Vedecké vymedzenie konceptu (Parton & Chester, 2023)</h2>
+                        <p class="text-xs md:text-sm text-slate-700 leading-relaxed">
+                            Pasívna agresia je označenie pre určitý spôsob vyjadrenia odporu či agresie, ktorého hranice veda stále spresňuje. V širšom historickom ponímaní, cieľom pasívnej agresie nebolo len priame spôsobenie ujmy. Správanie mohlo slúžiť napríklad na vyjadrenie odporu alebo vyhnutie sa otvorenému konfliktu. Pasívna agresia bola vnímaná ako nepriame vyjadrenie hnevu, obštrukcionizmus, „tichá domácnosť“ alebo neschopnosť otvorenej konfrontácie. Často bola zamieňaná s neasertívnosťou. Najnovšie vedecké snahy predstavujú užší koncept - <em>agresia opomenutím</em> (aggression by omission), kde je <em>úmyselné nekonanie</em> alebo zadržanie, ktoré by zabránilo vzniku ujmy alebo ju zmiernilo, s cieľom uškodiť cieľovej osobe, podstatnou súčasťou definície. <strong> Rozhodujúca teda nie je len samotná nečinnosť, ale jej zámerná funkcia umožňovať alebo spôsobovať škodu.
+                                Tento typ správania je psychologicky rovnocenný s aktívnou agresiou, pričom obe formy sú podobne ovplyvnené provokáciou.
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- TWO COLUMN COMPARISON: LAY BELIEFS VS. UNDER THE SURFACE -->
+            <div class="mt-5 grid lg:grid-cols-2 gap-8">
+                
+                <!-- LEFT SIDE: WHAt people think -->
+                <div class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 space-y-4">
+                    <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-cyan-300 flex items-center space-x-2">
+                            
+                            <span>Čo si ľudia zvyčajne predstavujú</span>
+                        </h3>
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2.5 py-1 rounded-full font-semibold">Kliknite pre detaily</span>
+                    </div>
+                    <p class="text-xs text-slate-400">
+                        Laické chápanie často zjednodušuje a automaticky zamieňa vonkajšie prejavy so zlým úmyslom.
+                    </p>
+
+                    <!-- Expandable Lay Cards -->
+                    <div class="space-y-3">
+                        <!-- Card 1 -->
+                        <div onclick="toggleLayCard('lay1')" class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-sm text-slate-200">Tiché trestanie</h4>
+                                <span id="icon-lay1" class="text-xs text-indigo-400 font-bold">+</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">„Nebudem sa s tebou rozprávať, aby si pochopil/a.“</p>
+                            <div id="lay1" class="hidden mt-3 pt-3 border-t border-white/10 text-xs text-slate-300 space-y-1">
+                                <p><strong class="text-blue-300">Laické chápanie:</strong> Zámerné mlčanie za účelom trestu a manipulácie.</p>
+                                <p><strong class="text-blue-300">Vedecká realita:</strong> Môže ísť o pasívno-agresívne správanie, ale samotné mlčanie nestačí. Rozhodujúca je funkcia a zámer správania (napr. snaha vyhnúť sa konfliktu, emocionálne preťaženie či trápenie vs. úmysel uškodiť alebo vyvolať odpor).</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div onclick="toggleLayCard('lay2')" class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-sm text-slate-200">Nekonanie</h4>
+                                <span id="icon-lay2" class="text-xs text-indigo-400 font-bold">+</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">„Povedal/a, že to spraví. Neurobil/a to.“</p>
+                            <div id="lay2" class="hidden mt-3 pt-3 border-t border-white/10 text-xs text-slate-300 space-y-1">
+                                <p><strong class="text-blue-300">Laické chápanie:</strong> Úmyselná sabotáž, pomsta alebo zlomyseľná tvrdohlavosť.</p>
+                                <p><strong class="text-blue-300">Vedecká realita:</strong> Nesplnenie dohody môže mať viacero vysvetlení. Od zabudnutia či preťaženia až po odpor alebo zámerné zadržanie konania. Samotný výsledok nám nehovorí, ktorý mechanizmus (napríklad obštrukcia, prokrastinácia) bol prítomný.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div onclick="toggleLayCard('lay3')" class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-sm text-slate-200">Predstieranie súhlasu</h4>
+                                <span id="icon-lay3" class="text-xs text-indigo-400 font-bold">+</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">„Áno, jasné...“ (a následne spoluprácu blokuje).</p>
+                            <div id="lay3" class="hidden mt-3 pt-3 border-t border-white/10 text-xs text-slate-300 space-y-1">
+                                <p><strong class="text-blue-300">Laické chápanie:</strong> Zámerné zavádzanie. </p>
+                                <p class="text-slate-300">Môže ísť o pasívnu agresiu, ale aj o nízku asertivitu, vyhýbanie sa konfliktu, ambivalentný súhlas, preťaženie alebo odpor. Bez ďalšieho kontextu nemožno určiť, ktorý proces prevažuje. Súhlas + nesplnenie úlohy ≠ automaticky pasívna agresia.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div onclick="toggleLayCard('lay4')" class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-sm text-slate-200">Sarkazmus a podpichovanie</h4>
+                                <span id="icon-lay4" class="text-xs text-indigo-400 font-bold">+</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">„Nie, vôbec mi nevadí, že si to zase neurobil/a.“</p>
+                            <div id="lay4" class="hidden mt-3 pt-3 border-t border-white/10 text-xs text-slate-300 space-y-1">
+                                <p><strong class="text-blue-300">Laické chápanie:</strong> Nevie sa narovinu konfrontovať, tak ma ironicky zhadzuje.</p>
+                                <p><strong class="text-blue-300">Vedecká realita:</strong> Sarkazmus môže byť hravý, ironický, nepriateľský, relačne agresívny alebo jednoducho komunikačný štýl, ale <strong>nie je definujúcim znakom pasívnej agresie.</strong> Kľúčový je kontext.</p>
+                                <p class="text-slate-300">Súčasná literatúra kritizuje práve to, že staršie merania do jedného konštruktu miešali ignorovanie, negativizmus, relačnú agresiu a ďalšie nesúvisiace správania.</p>
+                            </div>
+                        </div>
+                        <!-- BOTTOM CRITICAL STATEMENT -->
+                    <div class="mt-4 bg-orange-300/10 border-2 border-orange-200/40 rounded-2xl p-4 text-center">
+                        <span class="text-xs font-black text-orange-200 uppercase tracking-widest block">Kľúčový záver</span>
+                        <p class="text-xs md:text-sm text-slate-200 font-medium mt-1">
+                            Ľudia často zamieňajú pozorované správanie <strong class="text-orange-200 underline decoration-orange-200 decoration-2">za úmysel.</strong> Správanie samo osebe zámer ani funkciu nedokazuje. Napríklad zabudnutie, oneskorenie alebo mlčanie môže byť pasívna agresia, ale rovnako môže ísť o nepozornosť, vyčerpanie, úzkosť, vyhýbanie sa z iných príčin alebo obyčajnú neochotu.
+                        </p>
+                    </div>
+                </div>
+                </div>
+
+                <!-- RIGHT SIDE:  -->
+                <div class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-cyan-300 flex items-center space-x-2">
+                                
+                                <span>Čo hovorí výskum pasívnej agresie</span>
+                            </h3>
+                            <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2.5 py-1 rounded-full font-semibold">Funkcia a správanie</span>
+                        </div>
+
+                        <!-- GRAPHICAL CONTAINER (HTML/CSS) -->
+                        <div class="mt-4 space-y-3">
+                            
+                            <!-- ABOVE WATER (SURFACE BEHAVIOR) -->
+                            <div class="bg-gradient-to-r from-cyan-950/60 to-indigo-950/60 border border-blue-400/30 rounded-2xl p-4">
+                                <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest mb-2 flex items-center justify-between">
+                                    <span>VIDITEĽNÉ SPRÁVANIE</span>
+                                    <span class="text-slate-400 font-normal">(Objektívne pozorovateľné)</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 text-xs">
+                                    <span class="bg-blue-500/20 border border-cyan-400/30 px-2.5 py-1 rounded-lg text-blue-200">neefektívnosť / nesplnenie dohody</span>
+                                    <span class="bg-blue-500/20 border border-cyan-400/30 px-2.5 py-1 rounded-lg text-blue-200">odkladanie / oneskorovanie</span>
+                                    <span class="bg-blue-500/20 border border-cyan-400/30 px-2.5 py-1 rounded-lg text-blue-200">zadržiavanie pomoci</span>
+                                    <span class="bg-blue-500/20 border border-cyan-400/30 px-2.5 py-1 rounded-lg text-blue-200">ignorovanie / stiahnutie sa / mlčanie</span>
+                                    <span class="bg-blue-500/20 border border-cyan-400/30 px-2.5 py-1 rounded-lg text-blue-200">obštrukcie</span>
+                                    <span class="bg-blue-500/20 border border-cyan-400/30 px-2.5 py-1 rounded-lg text-blue-200">nepriame vyjadrenie nesúhlasu / zavádzanie</span>
+                                </div>
+                            </div>
+
+                            <!-- DIVIDER LINE -->
+                            <div class="text-center text-xs font-bold text-cyan-400 tracking-widest">
+                                ↓ FUNKCIE & MOTIVÁCIA ↓
+                            </div>
+
+                            <!-- BELOW WATER (POSSIBLE FUNCTIONS) -->
+                            <div class="bg-gradient-to-r from-slate-950 to-indigo-950 border border-indigo-500/30 rounded-2xl p-4">
+                                <div class="text-[10px] font-bold text-blue-300 uppercase tracking-widest mb-2 flex items-center justify-between">
+                                    <span>ČO BY MOHLO BYŤ ZA SPRÁVANÍM</span>
+                                    <span class="text-slate-400 font-normal">(možné procesy a funkcie)</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <div class="bg-white/5 p-2 rounded-lg text-slate-300">• odpor / resentiment (hlboký a dlhodobý negatívny citový postoj)</div>
+                                    <div class="bg-white/5 p-2 rounded-lg text-slate-300">• skrytá hostilita / nevraživosť</div>
+                                    <div class="bg-white/5 p-2 rounded-lg text-slate-300">• reaktancia (obrana slobody, odpor voči obmedzeniam)</div>
+                                    <div class="bg-white/5 p-2 rounded-lg text-slate-300">• vyhnutie sa otvorenému konfliktu</div>
+                                    <div class="bg-white/5 p-2 rounded-lg text-slate-300">• snaha potrestať</div>
+                                    <div class="bg-white/5 p-2 rounded-lg text-slate-300">• skryté ovplyvňovanie</div>
+                                    <div class="bg-orange-300/20 border border-orange-300/30 p-2 rounded-lg text-orange-200 font-semibold">• zámerné zadržanie konania, ktoré by zabránilo alebo zmiernilo ujmu</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOTTOM CRITICAL STATEMENT -->
+                    <div class="mt-4 bg-orange-300/10 border-2 border-orange-200/40 rounded-2xl p-4 text-center">
+                        <span class="text-xs font-black text-orange-200 uppercase tracking-widest block">Kľúčový záver</span>
+                        <p class="text-xs md:text-sm text-slate-200 font-medium mt-1">
+                            Tieto funkcie <strong class="text-orange-200 underline decoration-orange-200 decoration-2">NEVIEME VŽDY SPOĽAHLIVO URČIŤ</strong> iba zo samotného vonkajšieho správania. Treba ich overovať v kontexte.
+                        </p>
+                    </div>
+                </div>
+            </div>
+                
+            <!-- PRINCIPLE + TRIANGULATION NAVIGATION -->
+            <div class="mt-5 mx-auto bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-5 md:p-6 shadow-xl">
+
+                <!-- PRINCIPLE -->
+                <div class="text-center mb-6">
+                    <span class="text-xs font-light text-cyan-400 uppercase tracking-widest bg-slate-500/10 border border-slate-400/30 px-3 py-1 rounded-full">Základný princíp</span>
+
+                    <h4 class="text-lg md:text-xl font-black text-white mt-2">
+                     Funkciu môžeme skúmať.
+                    <span class="text-cyan-300">Úmysel nemáme automaticky predpokladať.</span>
+                    </h4>
+
+                    <p class="text-xs md:text-sm text-slate-400 max-w-2xl mx-auto mt-2 leading-relaxed">
+                     Rovnaké správanie môže mať rôzne funkcie.
+                     Preto namiesto okamžitého pripísania úmyslu
+                     postupujeme od pozorovania k overovaniu.
+                    </p>
+                </div>
+
+                <!-- DIVIDER -->
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="h-px bg-white/10 flex-1"></div>
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    Ako funkciu overovať?
+                    </span>
+                    <div class="h-px bg-white/10 flex-1"></div>
+                </div>
+
+                <!-- TRIANGULATION -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                <!-- STEP 1 -->
+                <div class="bg-white/5 border border-cyan-400/20 rounded-2xl p-4">
+                    <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-400/30
+                            flex items-center justify-center text-cyan-300 font-black text-sm">
+                             1
+                    </div>
+
+                <div>
+                <span class="text-[9px] font-bold text-cyan-300 uppercase tracking-widest">
+                         Pozorovanie
+                    </span>
+                    <h5 class="text-sm font-bold text-white">
+                         Čo sa stalo?
+                    </h5>
+                    </div>
+                </div>
+
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                      Oddelíme pozorovateľné správanie od interpretácie.
+                      Čo človek konkrétne urobil alebo neurobil?
+                    </p>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="bg-white/5 border border-indigo-400/20 rounded-2xl p-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-400/30
+                                    flex items-center justify-center text-indigo-300 font-black text-sm">
+                            2
+                        </div>
+
+                        <div>
+                        <span class="text-[9px] font-bold text-indigo-300 uppercase tracking-widest">
+                                Kontext & vzorec
+                        </span>
+                        <h5 class="text-sm font-bold text-white">
+                                Čo tomu predchádzalo?
+                        </h5>
+                    </div>
+                </div>
+
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Skúmame situáciu, opakovanie správania, vzťah medzi ľuďmi,
+                        predchádzajúci konflikt a možné alternatívne vysvetlenia.
+                    </p>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="bg-white/5 border border-orange-200/20 rounded-2xl p-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-orange-200/20 border border-rose-400/30
+                                    flex items-center justify-center text-orange-300 font-black text-sm">
+                            3
+                        </div>
+
+                    <div>
+                        <span class="text-[9px] font-bold text-orange-300 uppercase tracking-widest">
+                                Overenie
+                        </span>
+                        <h5 class="text-sm font-bold text-white">
+                                Čo ďalšie vieme zistiť?
+                        </h5>
+                    </div>
+                </div>
+
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                         Ak je to vhodné a bezpečné, získame ďalšiu informáciu
+                        komunikáciou. Ak nie, opierame sa o opakované pozorovania,
+                        dôsledky a ďalšie dostupné údaje.
+                        </p>
+                    </div>
+
+               </div>
+
+               <!-- NAVIGATION -->
+               <div class="mt-5 pt-4 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+
+                    <div class="text-center md:text-left">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        Ďalší krok
+                    </span>
+
+                    <p class="text-xs text-slate-300 mt-1">
+                        Najprv pozoruj → potom hľadaj kontext → až potom interpretuj funkciu.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs font-bold text-cyan-300">
+                    <span>SPRÁVANIE</span>
+                    <span class="text-slate-600">→</span>
+                    <span>KONTEXT</span>
+                    <span class="text-slate-600">→</span>
+                    <span>FUNKCIA</span>
+                </div>
+
+            </div>
+    
+    </section>
+
+        <!-- SECTION 2: INTERACTIVE SCENARIO INSPECTOR ("KLIKNI NA SPRÁVANIE") -->
+        <section class="mt-5 bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="text-center max-w-3xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 border border-cyan-400/20 px-3 py-1 rounded-full">Scenáre</span>
+                <h2 class="text-2xl md:text-3xl font-black text-white">Kliknite na správanie a preskúmajte podrobne</h2>
+                <p class="text-slate-300 text-xs md:text-sm">
+                    Zistite, ako môže mať rovnaké viditeľné správanie rôzne vysvetlenia.
+                </p>
+            </div>
+
+            <!-- BEHAVIOR SELECTOR BUTTONS -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <button onclick="selectBehavior('beh1')" id="btn-beh1" class="beh-btn active-beh bg-slate-600 border border-slate-400 text-white text-xs font-bold p-3.5 rounded-2xl transition-all duration-300 shadow-lg text-left">
+                    <span class="block text-slate-300 font-normal text-[10px] uppercase">Scenár 1</span>
+                    „Neurobil/a, čo sľúbil/a.“
+                </button>
+                <button onclick="selectBehavior('beh2')" id="btn-beh2" class="beh-btn bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 text-xs font-bold p-3.5 rounded-2xl transition-all duration-300 text-left">
+                    <span class="block text-slate-400 font-normal text-[10px] uppercase">Scenár 2</span>
+                    „Zrazu prestal/a odpovedať / nereaguje.“
+                </button>
+                <button onclick="selectBehavior('beh3')" id="btn-beh3" class="beh-btn bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 text-xs font-bold p-3.5 rounded-2xl transition-all duration-300 text-left">
+                    <span class="block text-slate-400 font-normal text-[10px] uppercase">Scenár 3</span>
+                    „Spravil/a to veľmi nekvalitne.“
+                </button>
+                <button onclick="selectBehavior('beh4')" id="btn-beh4" class="beh-btn bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 text-xs font-bold p-3.5 rounded-2xl transition-all duration-300 text-left">
+                    <span class="block text-slate-400 font-normal text-[10px] uppercase">Scenár 4</span>
+                    „Použil/a sarkastickú poznámku.“
+                </button>
+            </div>
+
+            <!-- DYNAMIC BRANCHING DISPLAY -->
+            <div class="border-slate-500/30 rounded-2xl p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3"> 
+                    <h3 id="beh-title" class="font-bold text-slate-300 text-base">Analýza scenára: „Neurobil, čo sľúbil“</h3> 
+                    <span class="text-xs text-slate-400 font-mono">Otázka: Čo za tým môže byť?</span> 
+                </div>
+
+                <!-- 4 TIERS DISPLAY -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- GREEN --> 
+                     <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-xl space-y-1"> 
+                        <div class="flex items-center space-x-2"> 
+                            <span class="w-3 h-3 bg-emerald-500 rounded-full"></span> 
+                            <h4 id="beh-title-green" class="font-bold text-emerald-100 text-xs md:text-sm"> Nedbanlivé zlyhanie </h4> 
+                        </div> 
+                        <p id="beh-desc-green" class="text-xs text-slate-300 leading-relaxed"> Osoba mala zámer dohodu splniť, ale zabudla na ňu alebo jej v tom zabránilo preťaženie či vyčerpanie. </p> 
+                        <div id="beh-conclusion-green" class="text-[11px] font-bold text-emerald-100 pt-1"> Záver: Samotné správanie nie je dôkazom pasívnej agresie. </div> 
+                    </div> 
+                    <!-- YELLOW --> 
+                     <div class="bg-yellow-950/20 border border-yellow-500/30 p-4 rounded-xl space-y-1"> 
+                        <div class="flex items-center space-x-2"> 
+                            <span class="w-3 h-3 bg-yellow-500 rounded-full"></span> 
+                            <h4 id="beh-title-yellow" class="font-bold text-yellow-100 text-xs md:text-sm"> Vyhýbanie sa / neasertivita </h4> 
+                        </div> 
+                        <p id="beh-desc-yellow" class="text-xs text-slate-300 leading-relaxed"> Osoba nechcela alebo nedokázala otvorene odmietnuť požiadavku a namiesto priameho „nie“ sa jej vyhla nepriamym spôsobom. </p> 
+                        <div id="beh-conclusion-yellow" class="text-[11px] font-bold text-yellow-100 pt-1"> Záver: Môže ísť o neasertívne alebo konfliktu sa vyhýbajúce správanie. </div> 
+                    </div> 
+                    <!-- ORANGE --> 
+                     <div class="bg-orange-950/20 border border-orange-500/30 p-4 rounded-xl space-y-1"> 
+                        <div class="flex items-center space-x-2"> 
+                            <span class="w-3 h-3 bg-orange-500 rounded-full"></span> 
+                            <h4 id="beh-title-orange" class="font-bold text-orange-100 text-xs md:text-sm"> Odpor / nepriamy prejav </h4> 
+                        </div> 
+                        <p id="beh-desc-orange" class="text-xs text-slate-300 leading-relaxed"> Osoba požiadavku odmieta alebo voči nej pociťuje odpor, no svoj nesúhlas nevyjadrí priamo. </p> 
+                        <div id="beh-conclusion-orange" class="text-[11px] font-bold text-orange-100 pt-1"> Záver: Môže ísť o pasívno-agresívny vzorec, ale samotné správanie jeho mechanizmus nepotvrdzuje. </div> 
+                    </div> 
+                    <!-- RED --> 
+                     <div class="bg-rose-950/30 border border-rose-500/40 p-4 rounded-xl space-y-1"> 
+                        <div class="flex items-center space-x-2"> 
+                            <span class="w-3 h-3 bg-rose-500 rounded-full"></span> 
+                            <h4 id="beh-title-red" class="font-bold text-rose-100 text-xs md:text-sm"> Zámerné zadržanie konania </h4> 
+                        </div> 
+                        <p id="beh-desc-red" class="text-xs text-slate-300 leading-relaxed"> Osoba zámerne zadrží konanie, ktoré by zabránilo alebo zmiernilo ujmu. </p> 
+                        <div id="beh-conclusion-red" class="text-[11px] font-bold text-rose-100 pt-1"> Záver: Veľmi blízko k užšiemu konceptu „aggression by omission“. </div> 
+                    </div> 
+                </div>
+
+                    <div class="border-t border-slate-800 pt-4 mt-2"> 
+                        <div class="bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-4"> 
+                            <div class="flex items-center gap-2 mb-1"> 
+                                <span class="text-cyan-200 text-xs font-light uppercase tracking-wider"> Čo z toho vyplýva? </span> 
+                            </div> 
+                            <p id="beh-final" class="text-xs md:text-sm text-slate-300 leading-relaxed"> Samotné pozorované správanie ešte nehovorí, prečo sa stalo. Na jeho interpretáciu potrebujeme kontext, funkciu a informácie o úmysle. </p> 
+                </div> 
+            </div>
+
+        </section>
+
+
+        <!-- SECTION 5: VEDECKÝ FILTER ("JE TO PASÍVNA AGRESIA?") -->
+        <section class="mt-5 bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-10 shadow-2xl space-y-6">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-light text-cyan-400 uppercase tracking-widest bg-slate-500/10 border border-slate-400/30 px-3 py-1 rounded-full">Interaktívny filter</span>
+                <h2 class="text-2xl md:text-3xl font-black text-white">FILTER inšpirovaný vedeckými poznatkami: Môže to byť pasívna agresia?</h2>
+                <p class="text-slate-300 text-xs md:text-sm">
+                    4 kľúčové otázky pre ilustratívnu reflexiu pravdepodobnosti, že ide o reálnu agresiu opomenutím. Výsledok je orientačný a nemá slúžiť ako podklad pre rozhodovanie.
+                </p>
+            </div>
+
+            <!-- 4 QUESTIONS WIZARD -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                
+                <!-- Question 1 -->
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                    <span class="text-[10px] font-bold text-orange-200 uppercase">Otázka 1</span>
+                    <h4 class="text-xs font-bold text-white">Je v pozadí prítomný odpor, resentiment alebo antagonizmus?</h4>
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="setFilter(1, true)" id="q1-yes" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-indigo-600 transition font-medium">Áno</button>
+                        <button onclick="setFilter(1, false)" id="q1-no" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-rose-600 transition font-medium">Nie / Neviem</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                    <span class="text-[10px] font-bold text-orange-200 uppercase">Otázka 2</span>
+                    <h4 class="text-xs font-bold text-white">Je správanie nepriame alebo založené na zadržaní konania (opomenutí)?</h4>
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="setFilter(2, true)" id="q2-yes" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-indigo-600 transition font-medium">Áno</button>
+                        <button onclick="setFilter(2, false)" id="q2-no" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-rose-600 transition font-medium">Nie / Neviem</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                    <span class="text-[10px] font-bold text-orange-200 uppercase">Otázka 3</span>
+                    <h4 class="text-xs font-bold text-white">Má toto správanie reálny negatívny dopad na druhého?</h4>
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="setFilter(3, true)" id="q3-yes" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-indigo-600 transition font-medium">Áno</button>
+                        <button onclick="setFilter(3, false)" id="q3-no" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-rose-600 transition font-medium">Nie / Neviem</button>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                    <span class="text-[10px] font-bold text-orange-200 uppercase">Otázka 4</span>
+                    <h4 class="text-xs font-bold text-white">Existujú dôkazy/smerovanie, že škodlivý výsledok bol ZÁMERNÝ?</h4>
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="setFilter(4, true)" id="q4-yes" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-indigo-600 transition font-medium">Áno</button>
+                        <button onclick="setFilter(4, false)" id="q4-no" class="filter-btn text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-rose-600 transition font-medium">Nie / Neviem</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FILTER RESULT EVALUATOR OUTPUT BOX -->
+            <div id="filter-result-box" class="max-w-2xl mx-auto bg-slate-950 border border-white/20 p-6 rounded-2xl text-center space-y-2 transition duration-300">
+                <span id="filter-badge" class="bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-emerald-500/30">
+                    🟢 Skôr nie / Iný fenomén
+                </span>
+                <h3 id="filter-title" class="text-lg font-bold text-white mt-2">Môže ísť o nízku úroveň asertivity, vyčerpanie alebo iný jav</h3>
+                <p id="filter-desc" class="text-xs text-slate-300 leading-relaxed">
+                    Veda rozoznáva aj úzkosť z konfliktu, prokrastináciu, preťaženie alebo obyčajnú neochotu. Chýba indícia k zámernému vyvolaniu ujmy.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: KONTEXTY ("KDE SA MÔŽE OBJAVIŤ?") -->
+        <section class="mt-5 bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="mb-4">
+                <span class="text-xs font-light text-cyan-400 uppercase tracking-widest bg-slate-500/10 border border-slate-400/30 px-3 py-1 rounded-full">ODLÍŠENIE</span>
+                <h2 class="text-2xl md:text-3xl font-black text-white mt-1">Kde sa môže pasívna agresia objaviť?</h2>
+                <p class="text-slate-300 text-xs md:text-sm mt-1">
+                    Pasívno-agresívne správanie nie je viazané na jednu diagnózu. Môže sa objaviť u ľudí v klinickom aj v neklinickom kontexte.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- NON-PATHOLOGICAL CONTEXT -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center space-x-2 border-b border-white/10 pb-3">
+                        <span class="p-1.5 bg-emerald-500/20 text-emerald-300 rounded-lg text-sm font-bold"></span>
+                        <h3 class="font-bold text-cyan-200 text-base">Mimo psychopatológie (neklinická populácia)</h3>
+                    </div>
+                    
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Agresívne správanie sa môže objaviť aj u ľudí bez psychopatológie. Agresia sama osebe nie je diagnóza.
+                    </p>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 text-slate-300">
+                            <strong>Typické prostredia:</strong> Partnerské vzťahy, rodina, pracovisko, situácie s asymetriou moci (napr. podriadený vs. nadriadený).
+                        </div>
+                        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 text-slate-300">
+                            <strong>Vedecký poznatok:</strong> Novšia experimentálna práca (Parton & Chester, 2024) naznačuje, že agresia opomenutím môže byť podobne ako aktívna agresia ovplyvnená provokáciou a súvisieť s antagonizmom, sadizmom a črtovou agresivitou.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PSYCHOPATHOLOGICAL CONTEXT -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center space-x-2 border-b border-white/10 pb-3">
+                        <span class="p-1.5 bg-indigo-500/20 text-indigo-300 rounded-lg text-sm font-bold"></span>
+                        <h3 class="font-bold text-cyan-200 text-base">V psychopatologickom kontexte</h3>
+                    </div>
+
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Môže sa objavovať aj v kontexte rôznych foriem psychopatológie, ale nejde o špecifický diagnostický znak.
+                    </p>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 text-slate-300">
+                            <strong class="text-orange-200">Osobnostná psychopatológia:</strong> Výskum historického konštruktu pasívno-agresívnej osobnosti ukázal vzťahy s niektorými formami osobnostnej patológie vrátane hraničnej (BPD) a narcistickej (NPD) poruchy osobnosti.
+                        </div>
+                        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 text-slate-300">
+                            <strong class="text-orange-200">Depresívna symptomatológia:</strong> Výskum opisuje <em>do seba smerované pasívne-agresívne správanie</em>, teda škodlivú nečinnosť (napr. zanedbávanie vzhľadu) smerovanú voči sebe. V štúdii (Schanz et al. 2022) bolo takéto správanie zaznamenané častejšie u pacientov s depresívnou poruchou. Nejedná sa ale interpersonálnu pasívnu agresia. 
+                        </div>
+                        <div class="bg-slate-500/10 border border-slate-500/20 p-2.5 rounded-xl text-slate-200 text-[11px]">
+                            <strong>Poučenie a záver:</strong> Pasívno-agresívne správanie môže sprevádzať rôzne formy psychopatológie, ale NIE JE špecifickým diagnostickým markerom jedinej poruchy.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+            <!-- CORE KPIS / METRICS -->
+            <div class="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+                <div class="bg-white/10 backdrop-blur border border-white/10 rounded-xl p-4">
+                    <div class="text-xs text-cyan-600 uppercase font-light">Prierez poznatkov</div>
+                    <div class="text-2xl md:text-3xl font-black text-slate-600 mt-1">Pasívna agresia ako psychologický konštrukt</div>
+                    <div class="text-xs text-slate-700 mt-1">Orientačný prehľad: história, relevantné teórie, veda a výskum</div>
+                </div>
+                
+            </div>
+        </div>
+    </header>
+
+    <!-- STICKY NAVIGATION BAR -->
+    <nav class="sticky top-0 z-50 bg-white/5 border border white/10 text-white text-sm md:text-sm overflow-x-auto">
+        <div class="max-w-7xl mx-auto flex space-x-1 p-2 whitespace-nowrap">
+            <a href="#historia" class="px-3 py-1.5 rounded-lg hover:bg-blue-300 transition font-medium">🟦 História</a>
+            <a href="#millon" class="px-3 py-1.5 rounded-lg hover:bg-blue-300 transition font-medium">🟩 Millonove subtypy</a>
+            <a href="#psychoanalyza" class="px-3 py-1.5 rounded-lg hover:bg-blue-300 transition font-medium">🟪 Psychoanalýza & DMRS</a>
+            <a href="#schema" class="px-3 py-1.5 rounded-lg hover:bg-blue-300 transition font-medium">🟨 KBT & Schéma terapia</a>
+            <a href="#gestalt" class="px-3 py-1.5 rounded-lg hover:bg-blue-300 transition font-medium">🟧 Geštalt & Retroflekcia</a>
+            <a href="#neurobiologia" class="px-3 py-1.5 rounded-lg hover:bg-blue-300 transition font-medium">🟥 Interpersonálna dynamika & Regulácia emócií</a>
+            
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINERS -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- SECTION 1: HISTÓRIA A NOZOLÓGIA -->
+        <section id="historia" class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8">
+            <div class="mb-6">
+                <span class="text-xs font-light text-cyan-600 uppercase tracking-wider">Vývoj konštruktu</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mt-1">1. Historický vývoj a zmeny v klasifikačných manuáloch</h2>
+            </div>
+            
+            <p class="text-slate-200 font-light mt-3 mb-6">
+                Pasívna agresia prešla od druhej svetovej vojny zložitým vývojom. Termín sa objavil v roku 1945 v USA, pri opise nepriameho odporu vojakov voči vojenským požiadavkám. Neskôr sa dostal do psychiatrickej klasifikácie a postupne prešiel od situačného opisu správania ku konceptu poruchy osobnosti (Pasívno-agresívna porucha osobnosti - PAPD). V súčasnom DSM-5 už porucha osobnosti nefiguruje a pasívna agresia je chápaná cez <em>dimenzionálne rysy.</em>
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Timeline Component (Pure HTML/CSS) -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-200 mb-3">Milníky v klasifikácii a konceptualizácii</h3>
+                    <div class="relative border-l-2 border-indigo-300 pl-4 space-y-4 ml-2">
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-indigo-600 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">William C. Menninger</span>
+                            <p class="text-xs text-slate-100 font-medium">Termín sa objavuje v americkom vojenskom kontexte pri opise nepriameho odporu.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-indigo-600 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">1952 - DSM-I</span>
+                            <p class="text-xs text-slate-100 font-medium">Pasívno-agresívna osobnosť. Zahŕňala pasívne-závislý, pasívno-agresívny a agresívny typ.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-indigo-600 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">1980 - DSM-III</span>
+                            <p class="text-xs text-slate-100 font-medium">Pasívno-agresívna porucha osobnosti - formálne zaradenie.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-indigo-600 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">1987 - DSM-III-R</span>
+                            <p class="text-xs text-slate-100 font-medium">Revidované kritériá. Pasívno-agresívna porucha osobnosti (PAPD) sa rozširuje o podráždenosť, trucovanie a hádavosť.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-slate-500 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">1994 - DSM-IV</span>
+                            <p class="text-xs text-slate-100 font-medium">Pasívno agresívna (negativistická) porucha osobnosti.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">2013 - DSM-V</span>
+                            <p class="text-xs text-slate-100 font-medium">Pasívno-agresívne črty sa už neposudzujú ako samostatná porucha osobnosti. V súčasných dimenzionálnych modeloch osobnosti sa niektoré charakteristiky historicky spájané s pasívnou agresivitou prekrývajú najmä s antagonizmom a negatívnou afektivitou.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[23px] top-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></div>
+                            <span class="text-xs font-normal text-slate-100">2024 - Parton & Chester</span>
+                            <p class="text-xs text-slate-100 font-medium">Pasívna agresia ako užší koncept "agresia opomenutím" (aggression by omission - ABO).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evidence Map: Historical PAPD -->
+<div>
+
+    <h3 class="text-sm font-bold text-slate-200 text-center mb-2">
+        Výskum PAPD
+    </h3>
+
+    <p class="text-[11px] text-slate-200 text-center max-w-2xl mx-auto mb-5 leading-relaxed">
+        Výskum (historického) pasívno-agresívneho / negativistického
+        konštruktu PAPD ukázal prekryv s viacerými poruchami osobnosti.
+        
+    </p>
+
+
+    <!-- EVIDENCE NODES -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+
+        <!-- PARANOID PD -->
+        <div class="bg-white/5 border border-indigo-200
+                    rounded-2xl p-4 shadow-sm">
+
+            <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 shrink-0 rounded-full
+                            bg-indigo-50 border border-indigo-500
+                            flex items-center justify-center
+                            text-indigo-600 font-black text-sm">
+                    ●
+                </div>
+
+                <div class="min-w-0">
+
+                    <h4 class="text-sm font-bold text-slate-200">
+                        Paranoidná porucha osobnosti (PPD)
+                    </h4>
+
+                    <span class="inline-block mt-1
+                                 text-[9px] font-bold text-indigo-500
+                                 bg-indigo-50 px-2 py-1 rounded-full
+                                 uppercase tracking-wider">
+                        Štatisticky významný prekryv
+                    </span>
+
+                    <p class="text-xs text-slate-200 mt-2 leading-relaxed">
+                        V štúdii na dvojičkách bol nájdený prekryv medzi
+                        dimenzionálnym PAPD a PPD.
+                    </p>
+
+                    <p class="text-[9px] text-slate-400 mt-2 leading-relaxed">
+                        Czajkowski et al. (2008)
+                    </p>
+
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/18312126/"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1
+                              text-[9px] font-bold text-cyan-600
+                              hover:text-cyan-800 mt-1">
+                        PubMed ↗
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- BPD -->
+        <div class="bg-white/5 border border-indigo-200
+                    rounded-2xl p-4 shadow-sm">
+
+            <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 shrink-0 rounded-full
+                            bg-indigo-50 border border-indigo-500
+                            flex items-center justify-center
+                            text-indigo-600 font-black text-sm">
+                    ●
+                </div>
+
+                <div class="min-w-0">
+
+                    <h4 class="text-sm font-bold text-slate-200">
+                        Hraničná porucha osobnosti (BPD)
+                    </h4>
+
+                    <span class="inline-block mt-1
+                                 text-[9px] font-bold text-indigo-500
+                                 bg-indigo-50 px-2 py-1 rounded-full
+                                 uppercase tracking-wider">
+                        Štatisticky významný prekryv
+                    </span>
+
+                    <p class="text-xs text-slate-200 mt-2 leading-relaxed">
+                        V tej istej štúdii na dvojičkách bol prekryv aj
+                        medzi dimenzionálnym PAPD a BPD.
+                    </p>
+
+                    <p class="text-[9px] text-slate-400 mt-2 leading-relaxed">
+                        Czajkowski et al. (2008)
+                    </p>
+
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/18312126/"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1
+                              text-[9px] font-bold text-cyan-600
+                              hover:text-cyan-800 mt-1">
+                        PubMed ↗
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- NPD -->
+        <div class="bg-white/5 border border-cyan-200
+                    rounded-2xl p-4 shadow-sm">
+
+            <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 shrink-0 rounded-full
+                            bg-indigo-50 border border-indigo-200
+                            flex items-center justify-center
+                            text-cyan-600 font-black text-sm">
+                    ○
+                </div>
+
+                <div class="min-w-0">
+
+                    <h4 class="text-sm font-bold text-slate-200">
+                        Narcistická porucha osobnosti (NPP)
+                    </h4>
+
+                    <span class="inline-block mt-1
+                                 text-[9px] font-bold text-cyan-600
+                                 bg-cyan-50 px-2 py-1 rounded-full
+                                 uppercase tracking-wider">
+                        Empirický vzťah
+                    </span>
+
+                    <p class="text-xs text-slate-200 mt-2 leading-relaxed">
+                        Autori štúdie zistili významné vzťahy
+                        medzi PAPD a NPP.
+                    </p>
+
+                    <p class="text-[9px] text-slate-400 mt-2 leading-relaxed">
+                        Hopwood et al. (2009)
+                    </p>
+
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/19821648/"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1
+                              text-[9px] font-bold text-cyan-600
+                              hover:text-cyan-800 mt-1">
+                        PubMed ↗
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- BROADER OVERLAP -->
+        <div class="bg-white/5 border border-slate-200
+                    rounded-2xl p-4 shadow-sm">
+
+            <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 shrink-0 rounded-full
+                            bg-slate-200 border border-slate-200
+                            flex items-center justify-center
+                            text-slate-600 font-black text-sm">
+                    ◇
+                </div>
+
+                <div class="min-w-0">
+
+                    <h4 class="text-sm font-bold text-slate-200">
+                        Širší diagnostický prekryv
+                    </h4>
+
+                    <span class="inline-block mt-1
+                                 text-[9px] font-bold text-slate-700
+                                 bg-slate-100 px-2 py-1 rounded-full
+                                 uppercase tracking-wider">
+                        Spoluvýskyt s ďalšími poruchami
+                    </span>
+
+                    <p class="text-xs text-slate-200 mt-2 leading-relaxed">
+                        V klinickej vzorke spĺňalo takmer
+                        <strong>90 %</strong> osôb s negativistickou PAPD kritériá
+                        aspoň jednej ďalšej poruchy osobnosti.
+                        
+                    </p>
+
+                    <p class="text-[9px] text-slate-400 mt-2 leading-relaxed">
+                        Rotenstein et al. (2007)
+                    </p>
+
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/17373888/"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1
+                              text-[9px] font-bold text-cyan-600
+                              hover:text-cyan-800 mt-1">
+                        PubMed ↗
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- LEGEND -->
+    <div class="mt-5 pt-4 border-t border-slate-200">
+
+        <div class="flex flex-wrap justify-center gap-x-5 gap-y-2">
+
+            <div class="flex items-center gap-2">
+                <span class="text-indigo-600 font-black">●</span>
+                <span class="text-[10px] text-slate-300">
+                    Štatisticky významný prekryv
+                </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-cyan-600 font-black">○</span>
+                <span class="text-[10px] text-slate-300">
+                    Empirický vzťah
+                </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-slate-500 font-black">◇</span>
+                <span class="text-[10px] text-slate-300">
+                    Širší spoluvýskyt
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- METHODOLOGICAL NOTE -->
+    <div class="mt-4 bg-slate-50 border border-slate-200
+                rounded-xl px-4 py-3 text-center">
+
+        <p class="text-[10px] text-slate-500 leading-relaxed">
+
+            <strong class="text-slate-600">
+                Poznámka:
+            </strong>
+
+            Rôzne štúdie používali odlišné
+            vzorky, diagnostické kritériá a ukazovatele.
+            Empirický prekryv je však reálne zaznamenaný jav.
+            Jeho rozsah a interpretácia závisia
+            od použitej metódy a definície konštruktu. Viac informácií nájdete v uvedených odborných zdrojoch.
+
+        </p>
+
+    </div>
+
+</div>
+
+        </section>
+
+        <!-- SECTION 2: MILLONOVA TAXONÓMIA SUBTYPOV -->
+        <section id="millon" class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8">
+            <div class="mb-6">
+                <span class="text-xs font-light text-cyan-600 uppercase tracking-wider">Teoretická typológia</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mt-1">2. Millonova teoretická typológia negativistického spektra</h2>
+            </div>
+            
+            <p class="text-slate-200 font-light mb-6">
+                Americký psychológ Theodore Millon rozpracoval negativistické spektrum ako heterogénny osobnostný štýl a opísal viaceré varianty podľa kombinácie ďalších charakteristík. 
+                Ide o historickú teoretickú typológiu, nie o súčasnú diagnostickú klasifikáciu.
+                Typológia ukazuje, že negativistický vzorec nemusí
+        vyzerať vždy rovnako. <strong>Okľukový variant</strong> je
+        charakteristický nepriamym odporom a preto sa najviac približuje
+        historickému obrazu pasívnej agresie. <strong>Abrazívny variant</strong>
+        naopak posúva negativizmus smerom k otvorenej konfrontácii.
+            </p>
+
+            <!-- Cards Grid for Subtypes -->
+            <!-- CONCEPTUAL MAP — NOT A QUANTITATIVE MODEL -->
+            <div class="mt-8">
+               <h3 class="text-sm font-bold text-slate-200 text-center mb-2">
+                    Štyri teoretické varianty negativistického spektra
+               </h3>
+
+                <p class="text-xs text-slate-400 text-center max-w-2xl mx-auto mb-6">
+                  Tieto varianty opisujú historickú Millonovu konceptualizáciu negativistického osobnostného štýlu. Odlišujú sa kombináciou negativizmu
+                  s ďalšími charakteristikami. Nejedná sa o empirické ani súčasné subtypy. Dávajú len istý rámec pre porozumenie pasívnej agresie z historického pohľadu.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+
+                <!-- VACILLATING -->
+                <div class="bg-orange/5 border border-orange-400/20 rounded-2xl p-4">
+                    <div class="text-[10px] font-bold text-orange-200 uppercase tracking-widest">
+                      Vacillating
+                </div>
+
+                      <h4 class="text-sm font-bold text-white mt-1">
+                        Kolísavý
+                      </h4>
+
+                    <div class="mt-3 text-xs text-slate-400 leading-relaxed">
+                      Vnútorné rozpory a výrazné kolísanie postojov či emócií.
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-white/10">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                       Vzťah k téme
+                    </span>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Sekundárny. Samotná emočná fluktuácia nie je pasívna agresia.
+                    </p>
+                    </div>
+            </div>
+
+            <!-- DISCONTENTED -->
+            <div class="bg-white/5 border border-cyan-400/20 rounded-2xl p-4">
+                <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest">
+                    Discontented
+                </div>
+
+                <h4 class="text-sm font-bold text-white mt-1">
+                    Nespokojný
+                </h4>
+
+                <div class="mt-3 text-xs text-slate-400 leading-relaxed">
+                    Chronická nespokojnosť, sťažovanie si, mrzutosť,
+                    resentiment a nepriama kritika.
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-white/10">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                        Vzťah k téme
+                    </span>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Relevantný. Odpor môže byť vyjadrovaný nepriamo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CIRCUITOUS -->
+            <div class="bg-indigo-500/10 border border-indigo-400/50 rounded-2xl p-4 shadow-lg">
+                <div class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest">
+                    Circuitous
+                </div>
+
+                <h4 class="text-sm font-bold text-white mt-1">
+                    Okľukový
+                </h4>
+
+                <div class="mt-3 text-xs text-slate-300 leading-relaxed">
+                    Odpor vyjadrovaný nepriamo: odkladanie,
+                    „zabúdanie“, neefektívnosť, zanedbávanie
+                    alebo tvrdohlavosť.
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-indigo-400/20">
+                    <span class="text-[9px] font-bold text-indigo-300 uppercase tracking-widest">
+                        Vzťah k téme
+                    </span>
+                        <p class="text-xs text-slate-200 mt-1">
+                           Najbližšie k historickému obrazu nepriameho odporu.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ABRASIVE -->
+                <div class="bg-white/5 border border-rose-400/20 rounded-2xl p-4">
+                  <div class="text-[10px] font-bold text-rose-300 uppercase tracking-widest">
+                    Abrasive
+                   </div>
+
+                    <h4 class="text-sm font-bold text-white mt-1">
+                       Abrazívny
+                    </h4>
+
+                    <div class="mt-3 text-xs text-slate-400 leading-relaxed">
+                      Hádavosť, podráždenosť, tvrdohlavosť,
+                      kritickosť a devalvácia druhých.
+                    </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/10">
+                          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                            Vzťah k téme
+                          </span>
+                            <p class="text-xs text-slate-300 mt-1">
+                             Relevantný, ale viac konfrontačný než nepriamy.
+                            </p>
+                       </div>
+                  </div>
+
+                  <!-- SOURCE -->
+    <div class="mt-3 text-center">
+
+        <p class="text-[9px] text-slate-400 leading-relaxed">
+            *Zdroj:
+            Millon, T. (2011). Discontented Styles, Resentful Types, Negativistic Disorders: The DRN Spectrum. In Disorders of Personality, T. Millon (Ed.). https://doi.org/10.1002/9781118099254.ch11.
+        </p>
+
+        <a href=" https://doi.org/10.1002/9781118099254.ch11"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="inline-flex items-center gap-1
+                  text-[9px] font-bold text-cyan-500
+                  hover:text-cyan-700 mt-1">
+            Zdrojová štúdia ↗
+        </a>
+
+    </div>
+
+  
+            </div>
+        </div>
+        </div>
+        </section>
+
+            
+
+        <!-- SECTION 3: PSYCHOANALÝZA & DMRS -->
+        <section id="psychoanalyza" class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8">
+            <div class="mb-6">
+                <span class="text-xs font-light text-cyan-600 uppercase tracking-wider">Psychodynamická paradigma</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-200 mt-1">3. Pasívna agresia ako nezrelý obranný mechanizmus</h2>
+            </div>
+            
+            <p class="text-slate-200 font-light leading-relaxed mb-6">
+                Podľa Vaillanta a Perryho (model DMRS) je pasívna agresia zaradená medzi <strong>nezrelé obranné mechanizmy (Level 1: Akčná úroveň)</strong>. V psychodynamickom rámci sa pasívna agresia chápe ako obranný spôsob vyjadrenia konfliktu alebo negatívneho afektu prostredníctvom správania namiesto priamej komunikácie. 
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-6">
+                <!-- Chart 3: DMRS Defenses -->
+                <!-- DMRS HIERARCHY -->
+            <div>
+
+    <h3 class="text-sm font-bold text-slate-300 text-center mb-3">
+        DMRS: hierarchia obranných mechanizmov
+    </h3>
+
+    <p class="text-[11px] text-slate-300 text-center max-w-xl mx-auto mb-5 leading-relaxed">
+        Model *Defense Mechanisms Rating Scales (DMRS) usporadúva obranné
+        mechanizmy podľa ich adaptívnosti. Pasívna agresia patrí do
+        <strong>Level 1 – akčná obranná úroveň.</strong>
+    </p>
+
+
+    <!-- HIERARCHY -->
+    <div class="space-y-2 max-w-xl mx-auto">
+
+
+        <!-- LEVEL 7 -->
+        <div class="bg-emerald/5 border border-emerald-300
+                    rounded-xl px-4 py-3">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div>
+                    <span class="text-[9px] font-black text-emerald-300
+                                 uppercase tracking-wider">
+                        Level 7
+                    </span>
+
+                    <h4 class="text-sm font-bold text-emerald-400">
+                        Vysoko adaptívny
+                    </h4>
+                </div>
+
+                <span class="text-[9px] text-slate-300 text-right">
+                    humor · sublimácia · pridruženie<br>
+                    sebapozorovanie · altruizmus · potlačenie · anticipácia
+                </span>
+
+            </div>
+        </div>
+
+
+        <!-- LEVEL 6 -->
+        <div class="bg-slate/5 border border-slate-300
+                    rounded-xl px-4 py-3">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div>
+                    <span class="text-[9px] font-black text-slate-400
+                                 uppercase tracking-wider">
+                        Level 6
+                    </span>
+
+                    <h4 class="text-sm font-bold text-slate-400">
+                        Obsesívny
+                    </h4>
+                </div>
+
+                <span class="text-[9px] text-slate-300 text-right">
+                    izolácia afektu ·<br>
+                    intelektualizácia
+                </span>
+
+            </div>
+        </div>
+
+
+        <!-- LEVEL 5 -->
+        <div class="bg-slate/8 border border-slate-300
+                    rounded-xl px-4 py-3">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div>
+                    <span class="text-[9px] font-black text-slate-400
+                                 uppercase tracking-wider">
+                        Level 5
+                    </span>
+
+                    <h4 class="text-sm font-bold text-slate-400">
+                        Neurotický
+                    </h4>
+                </div>
+
+                <span class="text-[9px] text-slate-300 text-right">
+                    represia · disociácia ·<br>
+                    reakčná formácia · presun
+                </span>
+
+            </div>
+        </div>
+
+
+        <!-- LEVELS 4–2 -->
+        <div class="bg-slate/10 border border-slate-300
+                    rounded-xl px-4 py-3">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div>
+                    <span class="text-[9px] font-black text-slate-400
+                                 uppercase tracking-wider">
+                        Level 4,3,2
+                    </span>
+
+                    <h4 class="text-sm font-bold text-slate-400">
+                        Nezrelá úroveň obrany
+                    </h4>
+                </div>
+
+                <span class="text-[9px] text-slate-300 text-right">
+                    idealizácia · projekcia · devalvácia<br>
+                    všemocnosť · popieranie · racionalizácia
+                </span>
+
+            </div>
+        </div>
+
+
+        <!-- LEVEL 1 -->
+        <div class="bg-rose/5 border-2 border-rose-300
+                    rounded-xl px-4 py-4 shadow-sm">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div>
+                    <span class="text-[9px] font-black text-rose-400
+                                 uppercase tracking-wider">
+                        Level 1 
+                    </span>
+
+                    <h4 class="text-sm font-black text-rose-400 mt-0.5">
+                        Nezrelá úroveň - akčná
+                    </h4>
+                </div>
+
+                <span class="text-lg">
+                    ↓
+                </span>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3">
+
+                <div class="bg-rose/5 border border-rose-100
+                            rounded-lg px-2 py-2 text-center">
+                    <span class="text-[10px] font-semibold text-slate-100">
+                        Acting out (konania navonok)
+                    </span>
+                </div>
+
+                <div class="bg-rose/5 border border- text-rose-100
+                            rounded-lg px-2 py-2 text-center">
+                    <span class="text-[10px] font-semibold text-slate-100">
+                        Chronické <br>sťažovanie si spojené s odmietaním pomoci
+                    </span>
+                </div>
+
+                <div class="bg-rose/5 border border text-rose-100
+                            rounded-lg px-2 py-2 text-center shadow-sm">
+
+                    <span class="text-[10px] font-black">
+                        Pasívna<br>agresia
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INTERPRETATION -->
+    <div class="mt-5 bg-indigo-50 border border-indigo-200
+                rounded-xl px-4 py-3 text-center">
+
+        <p class="text-[10px] text-slate-600 leading-relaxed">
+
+            <strong class="text-cyan-700">
+                Čo to znamená?
+            </strong>
+
+            V rámci DMRS sa pasívna agresia chápe ako obranný spôsob,
+            pri ktorom sa opozícia alebo negatívny afekt vyjadrujú
+            nepriamo prostredníctvom správania namiesto priameho
+            vyjadrenia. Zaradenie na Level 1 opisuje
+            <strong>miesto mechanizmu v konkrétnej psychodynamickej
+            hierarchii</strong>. Nejedná sa tu o diagnózu, osobnostnú črtu ani
+            automatický dôkaz patologického správania.
+
+        </p>
+
+    </div>
+
+
+    <!-- SOURCE -->
+    <div class="mt-3 text-center">
+
+        <p class="text-[9px] text-slate-400 leading-relaxed">
+            *Zdroj:
+            Di Giuseppe & Perry (2021),
+            <em>The Hierarchy of Defense Mechanisms: Assessing Defensive
+            Functioning With the Defense Mechanisms Rating Scales Q-Sort</em>.
+        </p>
+
+        <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8555762/"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="inline-flex items-center gap-1
+                  text-[9px] font-bold text-cyan-500
+                  hover:text-cyan-700 mt-1">
+            Zdrojová štúdia ↗
+        </a>
+
+    </div>
+
+</div>
+
+
+</div>
+
+            </div>
+        </section>
+        
+
+        <!-- SECTION 4: CBT A SCHÉMA TERAPIA -->
+        <section id="schema" class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8">
+            <div class="mb-6">
+                <span class="text-xs font-light text-cyan-600 uppercase tracking-wider">Kognitívno-behaviorálny prístup</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mt-1">4. Jadrové presvedčenia a dynamika schéma módov</h2>
+            </div>
+            
+            <p class="text-slate-300 font-light leading-relaxed mb-6">
+    V schématerapii (Young, 2003) možno pasívno-agresívne správanie
+    <strong>chápať</strong> v súvislosti s niektorými schémami
+    a módmi. Relevantná môže byť napríklad schéma
+    <strong>podriadenia sa (Subjugation)</strong>, pri ktorej človek
+    nadmerne ustupuje požiadavkám druhých a potláča vlastné potreby,
+    preferencie alebo hnev. Súvisieť môže aj so schémou
+    <strong>emocionálnej inhibície</strong>,
+    ktorá zahŕňa obmedzovanie spontánneho vyjadrovania emócií a potrieb.
+    Tieto schémy samy osebe neznamenajú, že človek bude reagovať
+    pasívno-agresívne, ale poskytujú určitý rámec porozumenia.
+</p>
+
+<!-- Schema Modes: Possible Conceptualization -->
+<div class="bg-white/5 border border-slate-200 rounded-xl p-6">
+
+    <h3 class="text-sm font-bold text-cyan-700 mb-2 text-center">
+        Výber relevantných schémových módov
+    </h3>
+
+    <p class="text-[11px] text-slate-500 text-center max-w-2xl mx-auto mb-5 leading-relaxed">
+        Schématerapia nepredpokladá jeden univerzálny kauzálny reťazec.
+        Rôzne módy sa môžu aktivovať v závislosti od situácie,
+        schém a spôsobu zvládania.
+    </p>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+        <!-- MODE 1 -->
+        <div class="bg-white/5 p-4 rounded-lg border border-orange-200 shadow-sm">
+
+            <div class="text-xs font-bold text-orange-300 mb-1">
+                MÓD
+            </div>
+
+            <h4 class="font-bold text-slate-200 text-sm">
+                Podriadený kapitulant
+            </h4>
+
+            <p class="text-xs text-slate-400 mt-2">
+                „Ak ustúpim, vyhnem sa konfliktu.“
+            </p>
+
+            <div class="mt-3 text-[11px] text-slate-300 font-medium">
+                Možný prejav: nadmerné prispôsobovanie sa,
+                potláčanie vlastného nesúhlasu.
+            </div>
+
+        </div>
+
+
+        <!-- MODE 2 -->
+        <div class="bg-white/5 p-4 rounded-lg border border-orange-200 shadow-sm">
+
+            <div class="text-xs font-bold text-orange-300 mb-1">
+                MÓD
+            </div>
+
+            <h4 class="font-bold text-slate-200 text-sm">
+                Nahnevané dieťa
+            </h4>
+
+            <p class="text-xs text-slate-400 mt-2">
+                „Nechcem ustupovať. Som nahnevaný/á.“
+            </p>
+
+            <div class="mt-3 text-[11px] text-slate-300 font-medium">
+                Možný prejav: intenzívny hnev, odpor alebo
+                frustrácia, ktoré nemusia byť vyjadrené priamo.
+            </div>
+
+        </div>
+
+
+        <!-- MODE 3 -->
+        <div class="bg-white/5 p-4 rounded-lg border border-orange-200 shadow-sm">
+
+            <div class="text-xs font-bold text-orange-300 mb-1">
+                MÓD
+            </div>
+
+            <h4 class="font-bold text-slate-200 text-sm">
+                Odpojený ochranca
+            </h4>
+
+            <p class="text-xs text-slate-400 mt-2">
+                „Od emócií sa radšej odpojím.“
+            </p>
+
+            <div class="mt-3 text-[11px] text-slate-300 font-medium">
+                Možný prejav: emočné stiahnutie, vyhýbanie sa
+                kontaktu alebo potlačenie emocionálnej reakcie.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- IMPORTANT QUALIFIER -->
+    <div class="mt-5 bg-indigo-50 border border-indigo-200
+                rounded-xl px-4 py-3">
+
+        <p class="text-[10px] text-slate-600 leading-relaxed text-center">
+
+            <strong class="text-orange-300">
+                Dôležité:
+            </strong>
+
+            Tieto módy predstavujú iba návrh možných spôsobov, akými pasívna agresia môže byť chápaná
+            v rámci schématerapie. Rovnaké
+            pasívno-agresívne správanie môže mať inú psychologickú
+            funkciu a aktivácia konkrétneho módu sa nedá určiť
+            iba z pozorovaného správania.
+
+        </p>
+
+    </div>
+
+
+    <!-- SOURCE -->
+    <div class="mt-4 pt-3 border-t border-slate-200 text-center">
+
+        <p class="text-[9px] text-slate-400 leading-relaxed">
+            Teoretický rámec:
+            Young, Klosko & Weishaar (2003),
+            <em>Schema Therapy: A Practitioner's Guide</em>.
+        </p>
+
+    </div>
+
+</div>
+            </div>
+        </section>
+
+        
+
+        <!-- SECTION 6: regulácia -->
+        <section id="neurobiologia" class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8">
+            <div class="mb-6">
+                <span class="text-xs font-light text-cyan-600 uppercase tracking-wider">Interpersonálna dynamika a regulácia emócií</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mt-1">5. Čo vieme o potláčaní emočného prejavu?</h2>
+            </div>
+            
+            <p class="text-slate-200 font-light leading-relaxed mb-6">
+                Pasívna agresia a expresívna supresia (potláčanie emočných prejavov) sú dva rozdielne pojmy. Expresívna supresia je stratégia regulácie emócií, pri ktorej človek potláča vonkajší prejav prežívanej emócie. Neurozobrazovacie štúdie ukazujú pri jej používaní zvýšenú aktiváciu oblastí kognitívnej kontroly a regulácie. Výsledky týkajúce sa amygdaly nie sú konzistentné. Z neurobiológie expresívnej supresie nemožno priamo odvodiť mechanizmus pasívnej agresie.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-8">
+                <!-- CONCEPTUAL LEARY MAP -->
+<div class="mt-4">
+
+    <div class="flex justify-center mb-4">
+        <span class="text-[9px] font-bold text-indigo-300 uppercase tracking-[0.2em] 
+                     border border-indigo-400/20 bg-indigo-500/10 px-3 py-1 rounded-full">
+            Konceptuálna mapa inšpirovaná Learyho modelom
+        </span>
+    </div>
+
+    <div class="relative max-w-2xl mx-auto">
+
+        <!-- TOP AXIS LABEL -->
+        <div class="text-center mb-2">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                Dominancia
+            </span>
+            <div class="text-slate-600 text-xs mt-0.5">↑</div>
+        </div>
+
+        <!-- MAIN FIELD -->
+        <div class="relative h-[360px] md:h-[400px] 
+                    border border-white/10 rounded-3xl overflow-hidden
+                    bg-slate-950">
+
+            <!-- AFFILIATION / HOSTILITY GRADIENT -->
+            <div class="absolute inset-0 
+                        bg-gradient-to-r from-rose-950/30 via-transparent to-cyan-950/20">
+            </div>
+
+            <!-- QUADRANT DIVIDERS -->
+            <div class="absolute left-1/2 top-0 bottom-0 w-px bg-white/10"></div>
+            <div class="absolute top-1/2 left-0 right-0 h-px bg-white/10"></div>
+
+            <!-- QUADRANT LABELS -->
+
+            <!-- HOSTILE + DOMINANT -->
+            <div class="absolute top-5 left-5">
+                <span class="text-[9px] font-bold text-rose-300/60 uppercase tracking-widest">
+                    Hostilná dominancia
+                </span>
+            </div>
+
+            <!-- AFFILIATIVE + DOMINANT -->
+            <div class="absolute top-5 right-5 text-right">
+                <span class="text-[9px] font-bold text-cyan-300/60 uppercase tracking-widest">
+                    Asertívna dominancia
+                </span>
+            </div>
+
+            <!-- HOSTILE + SUBMISSIVE -->
+            <div class="absolute bottom-5 left-5">
+                <span class="text-[9px] font-bold text-rose-300 uppercase tracking-widest">
+                    Hostilita + submisivita
+                </span>
+                <p class="text-[9px] text-slate-500 mt-1 max-w-[150px]">
+                    priestor relevantný pre niektoré formy nepriameho odporu
+                </p>
+            </div>
+
+            <!-- AFFILIATIVE + SUBMISSIVE -->
+            <div class="absolute bottom-5 right-5 text-right">
+                <span class="text-[9px] font-bold text-cyan-300/60 uppercase tracking-widest">
+                    Afiliatívna submisivita
+                </span>
+            </div>
+
+
+            <!-- PASSIVE-AGGRESSIVE REGION -->
+            <div class="absolute left-[18%] bottom-[18%] 
+                        w-[145px] h-[105px] md:w-[175px] md:h-[125px]
+                        rounded-[50%]
+                        border border-indigo-400/50
+                        bg-indigo-500/10
+                        shadow-[0_0_35px_rgba(99,102,241,0.12)]
+                        flex items-center justify-center
+                        text-center">
+
+                <div>
+                    <div class="text-[10px] font-black text-indigo-200 uppercase tracking-widest">
+                        Pasívno-agresívny
+                    </div>
+
+                    <div class="text-[10px] font-semibold text-slate-300 mt-1">
+                        vzorec
+                    </div>
+
+                    <div class="text-[9px] text-slate-500 mt-2 max-w-[120px] mx-auto leading-relaxed">
+                        nízka otvorená dominancia
+                        + nepriateľstvo
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- INTERPERSONAL RESPONSE ARROW -->
+            <div class="absolute left-[53%] bottom-[30%] 
+                        w-[105px] md:w-[135px]
+                        flex items-center">
+
+                <div class="flex-1 h-px bg-amber-400/40"></div>
+
+                <div class="text-amber-300/70 text-sm ml-1">
+                    →
+                </div>
+            </div>
+
+            <!-- RESPONSE LABEL -->
+            <div class="absolute left-[58%] bottom-[20%] 
+                        text-[9px] text-amber-300/60 uppercase tracking-wider
+                        max-w-[125px] leading-relaxed">
+                možná komplementárna reakcia
+            </div>
+
+        </div>
+
+        <!-- BOTTOM AXIS -->
+        <div class="flex justify-between items-center mt-3 px-3">
+
+            <div class="flex items-center gap-2">
+                <span class="text-rose-300 text-sm">←</span>
+                <span class="text-[10px] font-bold text-rose-300 uppercase tracking-widest">
+                    Hostilita
+                </span>
+            </div>
+
+            <div class="text-[9px] text-slate-600 uppercase tracking-widest">
+                Afiliácia
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest">
+                    Afiliácia
+                </span>
+                <span class="text-cyan-300 text-sm">→</span>
+            </div>
+
+        </div>
+
+        <!-- VERTICAL AXIS EXPLANATION -->
+        <div class="text-center mt-3">
+            <span class="text-[9px] text-slate-500">
+                Interpersonálne správanie možno opisovať pozdĺž dvoch základných dimenzií:
+                <strong class="text-slate-400">dominancie</strong> a
+                <strong class="text-slate-400">afiliácie</strong>.
+            </span>
+        </div>
+
+    </div>
+</div>
+        <!-- PRAVÁ ČASŤ – VYSVETLENIE -->
+        <div class="bg-white/5 border border-indigo-400/20 rounded-2xl p-5">
+
+            <span class="text-[9px] font-bold text-indigo-300 uppercase tracking-widest">
+                Poznámka k diagramu
+            </span>
+
+            <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                
+                Niektoré formy nepriameho odporu možno v rámci
+                interpersonálnej dynamiky chápať ako kombináciu
+                nepriateľstva a nízkej otvorenej dominancie.
+            </p>
+
+            <p class="text-[10px] text-slate-200 mt-4 text-center lg:text-left leading-relaxed">
+              Vlastná konceptuálna ilustrácia inšpirovaná modelom
+              <em>Interpersonal Circumplex</em>
+               (Leary, 1957; Wiggins, 1991).
+               Umiestnenie pasívno-agresívneho vzorca je orientačné.
+            </p>
+
+        </div>
+                
+        </section>
+
+        
+        <!-- SECTION 4: PREČO JE POJEM NEJASNÝ? -->
+        <section class="bg-gradient-to-br from-indigo-950/80 via-slate-950 to-cyan-950/70 border border-indigo-400/30 rounded-3xl p-6 md:p-8 space-y-8">
+
+            <div class="mb-4">
+                <span class="text-sm font-light text-cyan-600 uppercase tracking-widest">
+                    Záver
+                </span>
+
+                 <h2 class="text-2xl md:text-3xl font-black text-white mt-1">
+                    Od pasívnej agresie k agresii opomenutím
+                </h2>
+
+                <p class="text-slate-200 font-light text-xs md:text-sm mt-2 max-w-3xl">
+                    Historicky sa pod "pasívnou agresiou" spájali viaceré, čiastočne odlišné
+                    javy. <strong>Preto nestačí pozorovať správanie. Dôležité je skúmať
+                    jeho kontext, funkciu a úmysel.</strong>
+                    Konštrukt "pasívna agresia" sa v priebehu desaťročí stal vágnym a sémanticky preťaženým pojmom. Pasívna agresia často maskuje cielené antisociálne správanie za prejavy prokrastinácie, ambivalencie alebo neobratnej komunikácie. 
+                    Presné premenovanie a redefinovanie tohto fenoménu na "agresiu opomenutím" nie je len lingvistickou úpravou, ale strategickým posunom. Umožňuje izolovať úmysel poškodiť druhého. Bez tejto precíznosti dochádza k fatálnym interpretačným chybám, kedy je vedomé zadržiavanie pomoci nesprávne interpretované ako pasivita či nedostatok motivácie, aj keby išlo o nepriateľský a úkladný zámer.
+                </p>
+            </div>
+
+
+            <!-- CENTRAL CONCEPT -->
+            <div class="relative flex flex-col items-center py-4">
+
+                <!-- CORE -->
+                <div class="relative z-10 bg-white/10 text-slate-900 rounded-2xl px-7 py-5
+                            shadow-xl border border-white/20 text-center max-w-sm">
+
+                    <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-100 mb-1">
+                        Zastrešujúce označenie
+                    </div>
+
+                    <div class="text-xl md:text-2xl text-slate-200">
+                        „Pasívna agresia“
+                    </div>
+
+                    <div class="text-xs uppercase text bg-slate-200 mt-2">
+                        nejednoznačný mechanizmus
+                    </div>
+                </div>
+
+
+                <!-- CONNECTOR -->
+                <div class="h-8 w-px bg-gradient-to-b from-white/30 to-white/10"></div>
+
+
+                <!-- POSSIBLE PROCESSES -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 w-full max-w-5xl">
+
+                    <!-- 1 -->
+                    <button onclick="toggleReason('process1')"
+                        class="text-left bg-indigo-500/10 hover:bg-indigo-500/20
+                               border border-indigo-400/20 rounded-2xl p-4 transition">
+
+                        <div class="text-lg mb-2">🟣</div>
+
+                        <div class="text-xs font-bold text-indigo-300 uppercase tracking-wide">
+                            Nepriamy odpor
+                        </div>
+
+                        <div class="text-[11px] text-slate-400 mt-1">
+                            odpor vyjadrený nepriamo
+                        </div>
+                    </button>
+
+
+                    <!-- 2 -->
+                    <button onclick="toggleReason('process2')"
+                        class="text-left bg-sky-500/10 hover:bg-sky-500/20
+                               border border-sky-400/20 rounded-2xl p-4 transition">
+
+                        <div class="text-lg mb-2">🔵</div>
+
+                        <div class="text-xs font-bold text-sky-300 uppercase tracking-wide">
+                             Vyhýbanie
+                        </div>
+
+                        <div class="text-[11px] text-slate-400 mt-1">
+                            únik pred konfliktom či požiadavkou
+                        </div>
+                    </button>
+
+
+                    <!-- 3 -->
+                    <button onclick="toggleReason('process3')"
+                        class="text-left bg-amber-500/10 hover:bg-amber-500/20
+                               border border-amber-400/20 rounded-2xl p-4 transition">
+
+                        <div class="text-lg mb-2">🟡</div>
+
+                        <div class="text-xs font-bold text-amber-300 uppercase tracking-wide">
+                            Prokrastinácia
+                        </div>
+
+                        <div class="text-[11px] text-slate-400 mt-1">
+                            odkladanie bez nutného agresívneho úmyslu
+                        </div>
+                    </button>
+
+
+                    <!-- 4 -->
+                    <button onclick="toggleReason('process4')"
+                        class="text-left bg-orange-500/10 hover:bg-orange-500/20
+                               border border-orange-400/20 rounded-2xl p-4 transition">
+
+                        <div class="text-lg mb-2">🟠</div>
+
+                        <div class="text-xs font-bold text-orange-300 uppercase tracking-wide">
+                            Negativizmus
+                        </div>
+
+                        <div class="text-[11px] text-slate-400 mt-1">
+                            odpor, nesúhlas alebo opozičnosť
+                        </div>
+                    </button>
+
+
+                     <!-- 5 -->
+                     <button onclick="toggleReason('process5')"
+                        class="text-left bg-rose-500/10 hover:bg-rose-500/20
+                               border border-rose-400/20 rounded-2xl p-4 transition">
+
+                        <div class="text-lg mb-2">🔴</div>
+
+                        <div class="text-xs font-bold text-rose-300 uppercase tracking-wide">
+                            Agresia opomenutím
+                        </div>
+
+                        <div class="text-[11px] text-slate-400 mt-1">
+                            užšie vymedzený výskumný koncept
+                        </div>
+                    </button>
+
+                </div>
+
+
+                <!-- INTERACTIVE EXPLANATIONS -->
+
+                <div id="process1"
+                     class="hidden w-full max-w-5xl mt-4 bg-indigo-500/10
+                            border border-indigo-400/20 rounded-xl p-4 text-xs text-slate-300">
+                    <strong class="text-indigo-300">Nepriamy odpor:</strong>
+                    človek môže odpor voči požiadavke alebo vzťahovej situácii
+                    vyjadriť nepriamo namiesto otvoreného nesúhlasu. Samotný nepriamy
+                    odpor však ešte neznamená agresiu.
+                </div>
+
+                <div id="process2"
+                     class="hidden w-full max-w-5xl mt-4 bg-sky-500/10
+                            border border-sky-400/20 rounded-xl p-4 text-xs text-slate-300">
+                    <strong class="text-sky-300">Vyhýbanie:</strong>
+                    nesplnenie požiadavky môže byť spôsobené snahou vyhnúť sa
+                    konfliktu, nepríjemnej situácii alebo samotnej požiadavke.
+                    Bez ďalších informácií nemožno automaticky predpokladať agresiu.
+                </div>
+
+                <div id="process3"
+                     class="hidden w-full max-w-5xl mt-4 bg-amber-500/10
+                            border border-amber-400/20 rounded-xl p-4 text-xs text-slate-300">
+                    <strong class="text-amber-300">Prokrastinácia:</strong>
+                    odkladanie úlohy môže vyzerať ako pasívny odpor, ale môže súvisieť
+                    s reguláciou pozornosti, motiváciou, záťažou alebo organizáciou
+                    správania. Samo osebe nie je dôkazom agresie.
+                </div>
+
+                <div id="process4"
+                     class="hidden w-full max-w-5xl mt-4 bg-orange-500/10
+                            border border-orange-400/20 rounded-xl p-4 text-xs text-slate-300">
+                    <strong class="text-orange-300">Negativizmus:</strong>
+                    nesúhlas, odpor alebo opozičné správanie sa môže prekrývať
+                    s tým, čo sa historicky označovalo ako pasívna agresia.
+                    Negativizmus však nie je synonymom agresie.
+                </div>
+
+                <div id="process5"
+                     class="hidden w-full max-w-5xl mt-4 bg-rose-500/10
+                            border border-rose-400/20 rounded-xl p-4 text-xs text-slate-300">
+                    <strong class="text-rose-300">Agresia opomenutím:</strong>
+                    Parton a Chester navrhli užšie vymedzenie, v ktorom ide o zámerné
+                    zadržanie konania, ktoré by zabránilo alebo zmiernilo ujmu.
+                    Kľúčová je teda funkcia konania a úmysel – nie samotná nečinnosť.
+                </div>
+
+            </div>
+
+
+            <!-- KEY SCIENTIFIC PRINCIPLE -->
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+
+                <div class="text-xs font-bold text-orange-100 uppercase tracking-widest mb-3">
+                    Kľúčový princíp
+                </div>
+
+                <div class="text-xl md:text-2xl font-black text-white">
+                    Rovnaké správanie ≠ rovnaký mechanizmus
+                </div>
+
+                <p class="text-xs md:text-sm text-slate-400 mt-3 max-w-2xl mx-auto leading-relaxed">
+                    „Neurobil, čo sľúbil“ môže znamenať zabudnutie, preťaženie,
+                    prokrastináciu, vyhýbanie sa konfliktu, odpor alebo zámerné
+                    opomenutie. Pozorované správanie samo osebe nestačí na určenie
+                    psychologického mechanizmu.
+                </p>
+
+            </div>
+
+
+            <!-- SCIENTIFIC TAKEAWAY -->
+            <div class="bg-slate-950/70 border border-white/10 rounded-2xl p-5">
+
+                <div class="flex items-start gap-3">
+
+                    <div class="text-slate-400 text-lg"></div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-200 text-sm mb-1">
+                            Čo sa teda mení vo výskume?
+                        </h3>
+
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Súčasný prístup smeruje k presnejšiemu rozlišovaniu medzi
+                            nepriamym odporom, neúmyselným opomenutím a agresívnym
+                            konaním. Novšie konceptualizácie preto skúmajú užšie
+                            definované formy správania namiesto toho, aby všetky
+                            prejavy nepriameho odporu označovali ako pasívnu agresiu. 
+                            Moderný vedecký koncept "agresia opomenutím" navracia primárnu funkciu agresie a definuje ju cez úmyselné a vedomé zadržanie prospešného alebo ujmu zmierňujúceho správania s jasným cieľom zabezpečiť, aby obeť utrpela negatívne následky.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-indigo-750 border-t border-white/10 text-slate-800 text-xs rounded-3xl py-8 text-center relative z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Interaktívny vedecko-popularizačný materiál o pasívnej agresii.</p>
+            <p>© 2026 Michaela Valachová - Insaytia</p>
+            <p class="mt-1 text-slate-700">Odborné zdroje: Všetky zdroje sú uvedené na Predicting Minds | Blog - Pasívna agresia: čo hovorí veda o tomto jave?</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // 1. SCENARIO DATA STORE
+        const behaviors = { 
+            beh1: { 
+                title: "Analýza scenára: „Neurobil/a, čo sľúbil/a“", 
+                greenTitle: "Nedbanlivosť / Zlyhanie", 
+                yellowTitle: "Vyhýbanie sa / Neasertivita", 
+                orangeTitle: "Nepriamy odpor", 
+                redTitle: "Zámerné zadržanie konania", 
+                green: "Osoba mala zámer dohodu splniť, ale zabudla na ňu alebo jej v tom zabránilo preťaženie, vyčerpanie či nedostatok zdrojov.", 
+                yellow: "Osoba nechcela alebo nedokázala otvorene odmietnuť požiadavku a namiesto priameho „nie“ sa jej vyhla nepriamym spôsobom.", 
+                orange: "Osoba požiadavku odmieta alebo voči nej pociťuje odpor, no svoj nesúhlas nevyjadrí priamo a odpor sa prejaví v správaní.", 
+                red: "Osoba zámerne zadrží konanie, ktoré by zabránilo alebo zmiernilo ujmu, pričom toto zadržanie súvisí so zámerom umožniť alebo udržať vznikajúcu ujmu.", 
+                greenConclusion: "Záver: Samotné nesplnenie dohody nie je dôkazom pasívnej agresie.", 
+                yellowConclusion: "Záver: Môže ísť o neasertívne alebo konfliktu sa vyhýbajúce správanie.", 
+                orangeConclusion: "Záver: Môže ísť o pasívno-agresívny vzorec, ale samotné správanie jeho mechanizmus nepotvrdzuje.", 
+                redConclusion: "Záver: Pri splnení podmienok ide o situáciu veľmi blízku konceptu *agresia opomenutím*.", 
+                final: "„Neurobil/a, čo sľúbil/a“ je iba pozorované správanie. Bez informácií o dôvode, kontexte a úmysle nemožno spoľahlivo určiť, čo za ním bolo." 
+            }, 
+            beh2: { 
+                title: "Analýza scenára: „Zrazu prestal/a odpovedať“", 
+                greenTitle: "Preťaženie / potreba odstupu", 
+                yellowTitle: "Vyhýbanie sa konfliktu", 
+                orangeTitle: "Nepriamy prejav odporu", 
+                redTitle: "Zámerné zadržanie informácie", 
+                green: "Osoba môže byť sociálne preťažená, vyčerpaná, zaujatá inými povinnosťami alebo môže potrebovať čas na spracovanie situácie.", 
+                yellow: "Osoba sa môže vyhýbať nepríjemnej konverzácii alebo konfliktu, pretože nevie alebo nechce otvorene vyjadriť svoj nesúhlas.", 
+                orange: "Mlčanie môže byť použité ako nepriamy spôsob vyjadrenia odporu, hnevu alebo nesúhlasu. Samotné mlčanie však neodhaľuje jeho funkciu.", 
+                red: "Osoba zámerne zadrží informáciu alebo pomoc, o ktorej vie, že jej neposkytnutie umožní alebo udrží ujmu voči druhej osobe.", 
+                greenConclusion: "Záver: Mlčanie samo osebe nie je pasívna agresia.", 
+                yellowConclusion: "Záver: Môže ísť o vyhýbavé alebo neasertívne správanie.", 
+                orangeConclusion: "Záver: Nepriamy prejav odporu je široký behaviorálny fenomén. Každá pasívna agresia je nepriamym prejavom odporu, ale zďaleka nie každý nepriamy odpor je pasívnou agresiou. Rozhodujúci je kontext, zámer a prítomnosť skrytej hostility.", 
+                redConclusion: "Záver: Ak ide o zámerné zadržanie konania umožňujúce alebo udržiavajúce ujmu, zodpovedá to užšiemu konceptu *agresia opomenutím*.", 
+                final: "Mlčanie môže mať viacero funkcií – od potreby odstupu až po zámerné zadržanie informácie. Samotná absencia odpovede preto neumožňuje určiť psychologický mechanizmus." 
+            }, 
+            beh3: { 
+                title: "Analýza scenára: „Spravil/a to veľmi nekvalitne“", 
+                greenTitle: "Nedostatok schopností / zdrojov", 
+                yellowTitle: "Preťaženie / neschopnosť odmietnuť", 
+                orangeTitle: "Obštrukcia / nepriamy odpor", 
+                redTitle: "Zámerné poškodenie prostredníctvom nekorektného konania", 
+                green: "Nízka kompetencia, nejasné inštrukcie, nedostatok zdrojov, časový tlak alebo obyčajná chyba môžu viesť k nekvalitnému výsledku bez zámeru škodiť.", 
+                yellow: "Osoba môže byť preťažená alebo nemusí vedieť odmietnuť ďalšiu úlohu. Nekvalitné splnenie môže byť dôsledkom nedostatočnej kapacity, nie odporu.", 
+                orange: "Ak osoba zámerne plní úlohu spôsobom, ktorým nepriamo vyjadruje odpor alebo obštruuje požiadavku, môže ísť o pasívno-agresívny vzorec.", 
+                red: "Ak osoba zámerne koná tak, že zadrží konkrétne konanie, ktoré by zabránilo alebo zmiernilo ujmu, môže ísť o situáciu zodpovedajúcu konceptu *agresia opomenutím*. Samotné nekvalitné vykonanie však túto podmienku nespĺňa automaticky.", 
+                greenConclusion: "Záver: Nekvalitný výsledok sám osebe nepreukazuje zámer ani pasívnu agresiu.", 
+                yellowConclusion: "Záver: Môže ísť o preťaženie, nedostatočnú kapacitu alebo problém s asertivitou.", 
+                orangeConclusion: "Záver: Môže ísť o nepriamy odpor alebo obštrukciu; potrebujeme poznať zámer a kontext.", 
+                redConclusion: "Záver: Samotná nekvalitná práca nie je *agresia opomenutím*, ak nejde o zadržanie konania vedúceho k umožneniu alebo udržaniu ujmy.", 
+                final: "Nekvalitný výsledok môže mať technické, organizačné alebo psychologické príčiny. Bez ďalších informácií nemožno z výsledku odvodiť zámer ani mechanizmus." 
+            }, 
+            beh4: { 
+                title: "Analýza scenára: „Použil/a sarkastickú poznámku“", 
+                greenTitle: "Humor / sebairónia", 
+                yellowTitle: "Obranná reakcia", 
+                orangeTitle: "Nepriame nepriateľstvo", 
+                redTitle: "Iný typ agresívneho konania", 
+                green: "Sarkazmus môže byť súčasťou humoru, sebairónie alebo neobratného pokusu odľahčiť situáciu.", 
+                yellow: "Sarkastická poznámka môže byť obrannou reakciou pri pocite ohrozenia, zahanbenia alebo sociálneho napätia.", 
+                orange: "Sarkazmus môže slúžiť ako nepriamy spôsob vyjadrenia nepriateľstva, kritiky alebo znevažovania. To však ešte neznamená pasívnu agresiu.", 
+                red: "Sarkazmus sám osebe nie je pasívnou agresiou, ale môže byť jej prejavom v maskovanej podobe. Obzvlášť, ak je prítomný dlhodobý vzorec znevažujúceho podpichovania, hostilita či verbálny sadizmus. ", 
+                greenConclusion: "Záver: Sarkazmus môže byť úplne neškodný a sám osebe nie je indikátorom pasívnej agresie.", 
+                yellowConclusion: "Záver: Môže ísť o obrannú alebo sociálne neobratnú reakciu.", 
+                orangeConclusion: "Záver: Môže ísť o nepriamy prejav nepriateľstva, ale nie automaticky o pasívnu agresiu.", 
+                redConclusion: "Záver: Samotná sarkastická poznámka nespĺňa koncept *agresia opomenutím*.", 
+                final: "Sarkazmus môže byť nepriateľský alebo zraňujúci, ale nie je synonymom pasívnej agresie. Pri interpretácii rozhoduje širší kontext a funkcia konkrétneho správania." 
+            } 
+        };
+        
+        function selectBehavior(behaviorKey) { 
+            const behavior = behaviors[behaviorKey]; 
+            if (!behavior) return;
+
+            /* --------------------------------- UPDATE SCENARIO TITLE --------------------------------- */ 
+            document.getElementById("beh-title").innerText = behavior.title;
+            
+            /* --------------------------------- UPDATE BOX TITLES --------------------------------- */ 
+            document.getElementById("beh-title-green").innerText = behavior.greenTitle; 
+            document.getElementById("beh-title-yellow").innerText = behavior.yellowTitle; 
+            document.getElementById("beh-title-orange").innerText = behavior.orangeTitle; 
+            document.getElementById("beh-title-red").innerText = behavior.redTitle;
+
+            // Update descriptions 
+            document.getElementById("beh-desc-green").innerText = behavior.green; 
+            document.getElementById("beh-desc-yellow").innerText = behavior.yellow; 
+            document.getElementById("beh-desc-orange").innerText = behavior.orange; 
+            document.getElementById("beh-desc-red").innerText = behavior.red; 
+
+            // Update conclusions 
+            document.getElementById("beh-conclusion-green").innerText = behavior.greenConclusion;
+            document.getElementById("beh-conclusion-yellow").innerText = behavior.yellowConclusion; 
+            document.getElementById("beh-conclusion-orange").innerText = behavior.orangeConclusion; 
+            document.getElementById("beh-conclusion-red").innerText = behavior.redConclusion; 
+
+            // Update final conclusion 
+            document.getElementById("beh-final").innerText = behavior.final; 
+
+            /* --------------------------------- RESET ALL SCENARIO BUTTONS --------------------------------- */ 
+            document.querySelectorAll(".beh-btn").forEach(btn => { 
+                btn.classList.remove( "active-beh", 
+                "bg-slate-600", 
+                "border-slate-400", 
+                "text-white", 
+                "shadow-lg" 
+            ); 
+            
+            btn.classList.add( 
+                "bg-white/5", 
+                "border-white/10", 
+                "text-slate-300" 
+            ); 
+        }
+    ); 
+    /* --------------------------------- ACTIVATE SELECTED SCENARIO --------------------------------- */ 
+    const activeButton = document.getElementById(`btn-${behaviorKey}`); 
+    if (activeButton) { 
+        activeButton.classList.remove( 
+            "bg-white/5", 
+            "border-white/10", 
+            "text-slate-300" 
+        ); 
+    activeButton.classList.add( 
+        "active-beh", 
+        "bg-slate-600", 
+        "border-slate-400", 
+        "text-white", 
+        "shadow-lg" 
+    ); 
+} 
+}
+
+    
+
+        // 2. TOGGLE LAY CARDS
+        function toggleLayCard(id) {
+            const card = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (card.classList.contains('hidden')) {
+                card.classList.remove('hidden');
+                icon.innerText = '−';
+            } else {
+                card.classList.add('hidden');
+                icon.innerText = '+';
+            }
+        }
+
+        // 3. TOGGLE REASONS
+        function toggleReason(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // 4. FILTER WIZARD LOGIC
+        const filterAnswers = { 1: false, 2: false, 3: false, 4: false };
+
+        function setFilter(qNum, value) {
+            filterAnswers[qNum] = value;
+            
+            // UI Button Toggles
+            const yesBtn = document.getElementById(`q${qNum}-yes`);
+            const noBtn = document.getElementById(`q${qNum}-no`);
+
+            if (value) {
+                yesBtn.classList.add('bg-indigo-600', 'text-white');
+                yesBtn.classList.remove('bg-white/5');
+                noBtn.classList.remove('bg-rose-600', 'text-white');
+                noBtn.classList.add('bg-white/5');
+            } else {
+                noBtn.classList.add('bg-rose-600', 'text-white');
+                noBtn.classList.remove('bg-white/5');
+                yesBtn.classList.remove('bg-indigo-600', 'text-white');
+                yesBtn.classList.add('bg-white/5');
+            }
+
+            evaluateFilter();
+        }
+
+        function evaluateFilter() {
+
+          const badge = document.getElementById('filter-badge');
+          const title = document.getElementById('filter-title');
+          const desc = document.getElementById('filter-desc');
+
+
+             // 🔴 Obe kľúčové kritériá sú splnené
+            if (filterAnswers[2] && filterAnswers[4]) {
+
+                badge.className = "bg-rose-500/20 text-rose-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-rose-500/40";
+                badge.innerText = "🔴 Veľmi blízko definícii agresie opomenutím";
+
+                title.innerText = "Splnené kľúčové kritériá pre „Aggression by Omission“";
+
+                desc.innerText = "Osoba zámerne zadržala konanie, ktoré by zabránilo alebo zmiernilo ujmu, pričom bol prítomný odpor či nepriateľstvo.";
+
+            // 🟡 Aspoň jedno z kľúčových kritérií je splnené
+            } else if (filterAnswers[2] || filterAnswers[4]) {
+
+                badge.className = "bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-amber-500/40";
+                badge.innerText = "🟡 Možno / Nepriamy odpor";
+
+                title.innerText = "Vidíme znak nepriameho odporu";
+
+                desc.innerText = "Jeden z kľúčových znakov je prítomný, ale chýba druhý znak potrebný na zaradenie medzi agresiu opomenutím. Môže ísť o pasívno-agresívny vzorec, neasertivitu alebo inú formu nepriameho odporu.";
+
+            // 🟢 Ani jedno z kľúčových kritérií nie je splnené
+            } else {
+
+                badge.className = "bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-emerald-500/30";
+                badge.innerText = "🟢 Skôr Nie / Iný fenomén";
+
+                title.innerText = "Chýbajú kľúčové znaky agresie opomenutím";
+
+                desc.innerText = "Výsledok naznačuje skôr iné vysvetlenie (napr. vyčerpanie, antagonizmus, frustrácia, vyhýbanie sa konfliktu a.i.). Negatívny postoj ani odpor ešte neznamenajú agresiu. Rozhodujúce je, či bolo konanie zámerne zadržané s cieľom umožniť alebo spôsobiť ujmu.";
+            }
+        }
+
+        // 5. CHART.JS INITIALIZATION
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            function formatLabels(labels) {
+                return labels.map(label => {
+                    if (typeof label === 'string' && label.length > 16) {
+                        const words = label.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        words.forEach(word => {
+                            if ((currentLine + ' ' + word).trim().length > 16) {
+                                if (currentLine) lines.push(currentLine.trim());
+                                currentLine = word;
+                            } else {
+                                currentLine += (currentLine ? ' ' : '') + word;
+                            }
+                        });
+                        if (currentLine) lines.push(currentLine.trim());
+                        return lines;
+                    }
+                    return label;
+                });
+            }
+
+            
+
+            // Universal Tooltip Callback Options
+            const commonTooltipOptions = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' ');
+                                } else {
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+
+
+        });
+    </script>
+</body>
+</html>
