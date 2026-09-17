@@ -1,15 +1,8 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-    <!--
-    CHOSEN PALETTE: Glassmorphic Dark Slate & Neon Cyan/Indigo/Amber/Emerald/Rose
-    - Background: Deep Indigo/Slate Gradient (#ffc2c2, #ffd9c2, #c2cdff)
-    - Glass Containers: bg-slate-900/60 backdrop-blur-xl border border-white/10
-    - Primary Accents: Cyan (#06b6d4), Indigo (#6366f1), Amber (#ffc2c2)
-    - Status Accents: Emerald (#10b981 - Non-aggressive), Yellow (#eab308 - Avoidant), Orange (#f97316 - PA Pattern), Rose (#f43f5e - Aggression by Omission)
-
-    CONFIRMATION:
-    Explicitne potvrdzujem, že v celom kóde NEBOLA použitá knižnica Mermaid JS a ani grafika SVG.
+  
+    
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,16 +39,16 @@
             z-index: 0;
         }
         :root {
-        --farba-okna: #365191;       /* napr. tmavomodrá */
-        --farba-okraja: #ffffff;     /* napr. biela */
-        --farba-nadpisu: #67e8f9;    /* napr. cyanová */
-        --farba-textu: #cbd5e1;      /* napr. svetlosivá */
+        --farba-okna: #365191;       
+        --farba-okraja: #ffffff;     
+        --farba-nadpisu: #67e8f9;    
+        --farba-textu: #cbd5e1;      
     
         }
         body {
-            /* Váš zvolený farebný gradient z poznámky */
+            /* farebný gradient */
             background: linear-gradient(135deg, #ffecc2, #ffd9c2, #c2d9ff);
-            /* Zabezpečí, že pozadie pokryje celú obrazovku aj pri scrollovaní */
+            /* pozadie pokryje celú obrazovku aj pri scrollovaní */
             min-height: 100vh; 
             background-attachment: fixed;
         }
@@ -63,7 +56,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen relative overflow-x-hidden">
 
-    <!-- AMBIENT BACKGROUND TRANSPARENT SHAPES -->
+    <!-- TRANSPARENT SHAPES -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div class="glass-blob w-[500px] h-[500px] bg-indigo-600 top-[-100px] left-[-100px]"></div>
         <div class="glass-blob w-[600px] h-[600px] bg-blue-600 top-[30%] right-[-150px]"></div>
@@ -91,27 +84,27 @@
             
         </header>
 
-        <!-- SECTION 1: STRED DIAGRAMU & LAY VS. SCIENTIFIC ICEBERG -->
+        <!-- SECTION 1: STRED DIAGRAMU -->
         <section class="space-y-8">
             
-            <!-- CENTRAL CORE NODE -->
+            <!-- CENTRAL -->
             <div class="bg-gradient-to-r from-indigo-950/80 via-slate-900/90 to-indigo-950/80 backdrop-blur-xl border-2 border-indigo-500/40 rounded-3xl p-6 md:p-8 text-center shadow-2xl relative">
                 <span class="text-xs font-light text-cyan-400 uppercase tracking-widest bg-slate-500/10 border border-slate-400/30 px-3 py-1 rounded-full">Insight</span>
                 <h2 class="text-2xl md:text-4xl font-black text-white mt-2">Agresia opomenutím</h2>
-                <p class="text-slate-200 font-medium text-sm md:text-base mt-1">
+                <p class="text-slate-200 font-normal text-sm md:text-base mt-1">
                     „Keď odpor alebo nepriateľstvo nejde von priamo, ale prejaví sa skryto, zámerným zadržaním konania, s cieľom nechať druhému vzniknúť ujmu.“
                 </p>
                 
             </div>
             
-            <!-- DEFINITION HIGHLIGHT BOX -->
+            <!-- Definícia -->
             <div class="max-w-4xl mx-auto bg-slate-900/5 border border-white/10 rounded-2xl p-5 text-left backdrop-blur-md">
                 <div class="flex items-start space-x-3">
                     <span class="text-2xl">💡</span>
                     <div>
-                        <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Vedecké vymedzenie konceptu (Parton & Chester, 2023)</h2>
+                        <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Vedecké vymedzenie konceptu (Parton & Chester, 2024)</h2>
                         <p class="text-xs md:text-sm text-slate-700 leading-relaxed">
-                            Pasívna agresia je označenie pre určitý spôsob vyjadrenia odporu či agresie, ktorého hranice veda stále spresňuje. V širšom historickom ponímaní, cieľom pasívnej agresie nebolo len priame spôsobenie ujmy. Správanie mohlo slúžiť napríklad na vyjadrenie odporu alebo vyhnutie sa otvorenému konfliktu. Pasívna agresia bola vnímaná ako nepriame vyjadrenie hnevu, obštrukcionizmus, „tichá domácnosť“ alebo neschopnosť otvorenej konfrontácie. Často bola zamieňaná s neasertívnosťou. Najnovšie vedecké snahy predstavujú užší koncept - <em>agresia opomenutím</em> (aggression by omission), kde je <em>úmyselné nekonanie</em> alebo zadržanie, ktoré by zabránilo vzniku ujmy alebo ju zmiernilo, s cieľom uškodiť cieľovej osobe, podstatnou súčasťou definície. <strong> Rozhodujúca teda nie je len samotná nečinnosť, ale jej zámerná funkcia umožňovať alebo spôsobovať škodu.
+                            Pasívna agresia je označenie pre určitý spôsob vyjadrenia odporu či agresie, ktorého hranice veda stále spresňuje. V širšom historickom ponímaní, cieľom pasívnej agresie nebolo len priame spôsobenie ujmy. Správanie mohlo slúžiť napríklad na vyjadrenie odporu alebo vyhnutie sa otvorenému konfliktu. Pasívna agresia bola vnímaná ako nepriame vyjadrenie hnevu, obštrukcionizmus, „tichá domácnosť“ alebo neschopnosť otvorenej konfrontácie. Často bola zamieňaná s neasertívnosťou. Najnovšie vedecké snahy predstavujú užší koncept - <em>agresia opomenutím</em> (aggression by omission), kde je <em>úmyselné nekonanie</em> alebo zadržanie konania, ktoré by zabránilo vzniku ujmy, podstatnou súčasťou definície. <strong> Rozhodujúca teda nie je len samotná nečinnosť, ale jej zámerná funkcia umožňovať alebo spôsobovať škodu.
                                 Tento typ správania je psychologicky rovnocenný s aktívnou agresiou, pričom obe formy sú podobne ovplyvnené provokáciou.
                         </p>
                     </div>
